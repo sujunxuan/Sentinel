@@ -15,12 +15,12 @@
  */
 package com.alibaba.csp.sentinel.dashboard.config;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.lang.NonNull;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * <p>Dashboard local config support.</p>
@@ -51,21 +51,44 @@ public class DashboardConfig {
      * Hide application name in sidebar when it has no healthy machines after specific period in millisecond.
      */
     public static final String CONFIG_HIDE_APP_NO_MACHINE_MILLIS = "sentinel.dashboard.app.hideAppNoMachineMillis";
+
     /**
      * Remove application when it has no healthy machines after specific period in millisecond.
      */
     public static final String CONFIG_REMOVE_APP_NO_MACHINE_MILLIS = "sentinel.dashboard.removeAppNoMachineMillis";
+
     /**
      * Timeout
      */
     public static final String CONFIG_UNHEALTHY_MACHINE_MILLIS = "sentinel.dashboard.unhealthyMachineMillis";
+
     /**
      * Auto remove unhealthy machine after specific period in millisecond.
      */
     public static final String CONFIG_AUTO_REMOVE_MACHINE_MILLIS = "sentinel.dashboard.autoRemoveMachineMillis";
 
+    /**
+     * nacos server
+     */
+    public static final String CONFIG_NACOS_SERVER_URL = "sentinel.dashboard.nacos.server";
+
+    /**
+     * nacos namespace
+     */
+    public static final String CONFIG_NACOS_SERVER_NAMESPACE = "sentinel.dashboard.nacos.namespace";
+
+    /**
+     * nacos username
+     */
+    public static final String CONFIG_NACOS_USERNAME = "sentinel.dashboard.nacos.username";
+
+    /**
+     * nacos password
+     */
+    public static final String CONFIG_NACOS_PASSWORD = "sentinel.dashboard.nacos.password";
+
     private static final ConcurrentMap<String, Object> cacheMap = new ConcurrentHashMap<>();
-    
+
     @NonNull
     private static String getConfig(String name) {
         // env
@@ -98,7 +121,7 @@ public class DashboardConfig {
 
     protected static int getConfigInt(String name, int defaultVal, int minVal) {
         if (cacheMap.containsKey(name)) {
-            return (int)cacheMap.get(name);
+            return (int) cacheMap.get(name);
         }
         int val = NumberUtils.toInt(getConfig(name));
         if (val == 0) {
@@ -121,19 +144,35 @@ public class DashboardConfig {
     public static int getHideAppNoMachineMillis() {
         return getConfigInt(CONFIG_HIDE_APP_NO_MACHINE_MILLIS, 0, 60000);
     }
-    
+
     public static int getRemoveAppNoMachineMillis() {
         return getConfigInt(CONFIG_REMOVE_APP_NO_MACHINE_MILLIS, 0, 120000);
     }
-    
+
     public static int getAutoRemoveMachineMillis() {
         return getConfigInt(CONFIG_AUTO_REMOVE_MACHINE_MILLIS, 0, 300000);
     }
-    
+
     public static int getUnhealthyMachineMillis() {
         return getConfigInt(CONFIG_UNHEALTHY_MACHINE_MILLIS, DEFAULT_MACHINE_HEALTHY_TIMEOUT_MS, 30000);
     }
-    
+
+    public static String getNacosServer() {
+        return getConfigStr(CONFIG_NACOS_SERVER_URL);
+    }
+
+    public static String getNacosNamespace() {
+        return getConfigStr(CONFIG_NACOS_SERVER_NAMESPACE);
+    }
+
+    public static String getNacosUsername() {
+        return getConfigStr(CONFIG_NACOS_USERNAME);
+    }
+
+    public static String getNacosPassword() {
+        return getConfigStr(CONFIG_NACOS_PASSWORD);
+    }
+
     public static void clearCache() {
         cacheMap.clear();
     }

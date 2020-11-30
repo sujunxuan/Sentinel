@@ -60,12 +60,14 @@ public class DegradeController {
 
     @Autowired
     private RuleRepository<DegradeRuleEntity, Long> repository;
+
     @Autowired
     private SentinelApiClient sentinelApiClient;
 
     @Autowired
     @Qualifier("degradeRuleNacosProvider")
     private DynamicRuleProvider<List<DegradeRuleEntity>> ruleProvider;
+
     @Autowired
     @Qualifier("degradeRuleNacosPublisher")
     private DynamicRulePublisher<List<DegradeRuleEntity>> rulePublisher;
@@ -83,7 +85,8 @@ public class DegradeController {
             return Result.ofFail(-1, "port can't be null");
         }
         try {
-            List<DegradeRuleEntity> rules = sentinelApiClient.fetchDegradeRuleOfMachine(app, ip, port);
+            //List<DegradeRuleEntity> rules = sentinelApiClient.fetchDegradeRuleOfMachine(app, ip, port);
+            List<DegradeRuleEntity> rules = ruleProvider.getRules(app);
             rules = repository.saveAll(rules);
             return Result.ofSuccess(rules);
         } catch (Throwable throwable) {
@@ -142,7 +145,7 @@ public class DegradeController {
             if (entity == null) {
                 return Result.ofFail(-1, "save entity fail");
             }
-            publishRules(oldEntity.getApp());
+            publishRules(entity.getApp());
         } catch (Throwable t) {
             logger.error("Failed to save degrade rule, id={}, rule={}", id, entity, t);
             return Result.ofThrowable(-1, t);
